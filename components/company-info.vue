@@ -42,6 +42,7 @@
     align-items: center;
     font-size: 16px;
     background: white;
+    cursor: pointer;
   }
 
   .unSelected:hover {

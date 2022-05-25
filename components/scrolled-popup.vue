@@ -54,13 +54,17 @@
               getCornerParams.call(this, _el)
             }
           }
+
           _el.oninput = () => {
             this.isShow = this.isData
           }
-
-          document.onclick = () => {
-            this.isShow = false
+           _el.onfocus = () => {
+            this.isShow = this.isData
           }
+
+          // _el.onfocusin = () => {
+          //   this.isShow = false
+          // }
         }
       },
     },

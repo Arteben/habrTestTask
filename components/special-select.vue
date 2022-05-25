@@ -1,13 +1,9 @@
 <template>
   <div class="main">
-    <div
-      v-if="false"
-      class="tiles"
-    >
-      <div class="tile">3345345235423542345</div>
-      <div class="tile">44</div>
-      <div class="tile">555</div>
-    </div>
+    <alias-tales
+      :aliases="taleList"
+      @tale-click="(_alias) => { $emit('tale-click', _alias) }"
+    ></alias-tales>
     <input
       ref="input"
       placeholder="type some text..."
@@ -17,6 +13,8 @@
 </template>
 
 <script>
+  const aliasTales = httpVueLoader('./alias-tales.vue')
+
   const getOneItem = (_img, _alias, _name) => {
     const img = _img != null && _img || './img/pic.png'
     return {
@@ -107,10 +105,16 @@
 
   module.exports = {
     name: 'specialSelect',
+    props: {
+      taleList: Array,
+    },
     data () {
       return {
         textValue: ''
       }
+    },
+    components: {
+      aliasTales
     },
     mounted () {
       const input = this.$refs.input
@@ -148,25 +152,6 @@
   background: white;
   border: 1px solid gray;
   display: flex;
-}
-
-.tiles {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  padding: 5px;
-  padding-right: 0px;
-}
-
-.tile {
-  display: inline-block;
-  margin: 0 2px;
-  padding: 2px 4px;
-  font-size: 16px;
-  font-weight: bold;
-  background: #32386f;
-  border-radius: 3px;
-  color: white;
 }
 
 input {

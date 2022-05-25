@@ -9,7 +9,7 @@
       <special-select
         @update-companies="onUpdateList"
         @create-input="onCreateInput"
-        @tile-click="onClickAlias"
+        @tale-click="onClickAlias"
         :tale-list="tileList"
       />
     </div>
