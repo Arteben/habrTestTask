@@ -4,7 +4,7 @@
     :class="selected && 'mainSelected' || 'unSelected'"
   >
     <img
-      :src="'./img/pic.png'"
+      :src="companyData.img"
       :key="companyData.img"
       />
     <div class="names">
@@ -16,7 +16,7 @@
 
 <script>
   module.exports = {
-    name: 'companyTile',
+    name: 'companyInfo',
     data () {
       return {
       }
@@ -30,12 +30,12 @@
         type: Object,
         default () {
           return {
-            img: './img/pic.png',
+            img: '',
             alias: '',
             name: '',
           }
         }
-      }
+      },
     },
   }
 </script>

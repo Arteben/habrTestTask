@@ -1,24 +1,25 @@
 <template>
-  <div class="root">
+  <div class="mainApp">
     <h3> test task </h3>
-      <div class="headerContainer">
-        <div class="header">
-          <span class >*</span>
-          <h4>Пользователь или компания</h4>
-        </div>
-        <special-select
-          @update-companies="onUpdateList"
-        />
+    <div class="headerContainer">
+      <div class="header">
+        <span class >*</span>
+        <h4>Пользователь или компания</h4>
       </div>
-    <scrolled-popup>
-      <template
-        v-if="dataList && dataList.length"
+      <special-select
+        @update-companies="onUpdateList"
+        @create-input="onCreateInput"
+      />
+    </div>
+    <scrolled-popup
+      :is-data="dataList.length > 0" 
+      :input="selectInput"
+    >
+      <company-info
+        v-for="(item, index) in dataList"
+        :key="index"
+        :company-data="item"
       >
-        <company-tile
-          :company-data="dataList[0]"
-          :selected="true"
-        >
-      </template>
     </scrolled-popup>
   </div>
 </template>
@@ -27,31 +28,35 @@
 
   const specialSelect = httpVueLoader('./special-select.vue')
   const scrolledPopup = httpVueLoader('./scrolled-popup.vue')
-  const companyTile = httpVueLoader('./company-tile.vue')
+  const companyInfo = httpVueLoader('./company-info.vue')
 
   module.exports = {
-    name: 'root',
+    name: 'mainVue',
     components: {
       specialSelect,
       scrolledPopup,
-      companyTile,
+      companyInfo,
     },
     data () {
       return {
-        dataList: null
+        dataList: [],
+        selectInput: null,
       }
     },
     methods: {
       onUpdateList (_list) {
-        console.log('update list', _list)
-        this.dataList = _list
+        this.dataList.splice(0, this.dataList.length)
+        this.dataList.push(..._list.splice(0, 10))
+      },
+      onCreateInput (_input) {
+        this.selectInput = _input
       }
     },
   }
 </script>
 
 <style scoped>
-.root {
+.mainApp {
   background: whitesmoke;
   min-height: 200px;
   display: flex;

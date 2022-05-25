@@ -1,9 +1,9 @@
 
-const rootVue = httpVueLoader('./components/root.vue')
+const mainVue = httpVueLoader('./components/main.vue')
 
 new Vue({
   el: '#app',
   components: {
-    rootVue
-  }
+    mainVue
+  },
 })

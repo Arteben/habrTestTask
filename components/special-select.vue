@@ -9,7 +9,7 @@
       <div class="tile">555</div>
     </div>
     <input
-      type
+      ref="input"
       placeholder="type some text..."
       v-model="text"
     />
@@ -19,19 +19,17 @@
 <script>
 
   const getDataForText = (() => {
-    const numItems = 50
-
     const getOneItem = (_val) => {
       return {
-        img: '',
+        img: './img/pic.png',
         alias: '@',
         name: _val,
         isSelected: false
       }
     }
-    return (_value) => {
+    return (_value = '') => {
       const items = []
-      for (let i = 0; i < numItems; i++) {
+      for (let i = 0; i < _value.length; i++) {
         items.push(getOneItem(_value))
       }
       return items
@@ -43,6 +41,12 @@
     data () {
       return {
         textValue: ''
+      }
+    },
+    mounted () {
+      const input = this.$refs.input
+      if (input) {
+        this.$emit('create-input', input)
       }
     },
     computed: {
