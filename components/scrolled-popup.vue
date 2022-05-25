@@ -1,6 +1,6 @@
 <template>
   <div class="popup" slot>
-    some text
+    <slot>empty popup</slot>
   </div>
 </template>
 

@@ -8,13 +8,54 @@
       <div class="tile">44</div>
       <div class="tile">555</div>
     </div>
-    <input type text placeholder="type some text..."/>
+    <input
+      type
+      placeholder="type some text..."
+      v-model="text"
+    />
   </div>
 </template>
 
 <script>
+
+  const getDataForText = (() => {
+    const numItems = 50
+
+    const getOneItem = (_val) => {
+      return {
+        img: '',
+        alias: '@',
+        name: _val,
+        isSelected: false
+      }
+    }
+    return (_value) => {
+      const items = []
+      for (let i = 0; i < numItems; i++) {
+        items.push(getOneItem(_value))
+      }
+      return items
+    }
+  })()
+
   module.exports = {
     name: 'specialSelect',
+    data () {
+      return {
+        textValue: ''
+      }
+    },
+    computed: {
+      text: {
+        set (_value) {
+          this.textValue = _value
+          this.$emit('update-companies', getDataForText(_value))
+        },
+        get () {
+          return this.textValue
+        }
+      }
+    }
   }
 </script>
 

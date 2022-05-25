@@ -6,10 +6,19 @@
           <span class >*</span>
           <h4>Пользователь или компания</h4>
         </div>
-        <special-select/>
+        <special-select
+          @update-companies="onUpdateList"
+        />
       </div>
     <scrolled-popup>
-      content for scroll popup
+      <template
+        v-if="dataList && dataList.length"
+      >
+        <company-tile
+          :company-data="dataList[0]"
+          :selected="true"
+        >
+      </template>
     </scrolled-popup>
   </div>
 </template>
@@ -18,13 +27,26 @@
 
   const specialSelect = httpVueLoader('./special-select.vue')
   const scrolledPopup = httpVueLoader('./scrolled-popup.vue')
+  const companyTile = httpVueLoader('./company-tile.vue')
 
   module.exports = {
     name: 'root',
     components: {
       specialSelect,
-      scrolledPopup
-    }
+      scrolledPopup,
+      companyTile,
+    },
+    data () {
+      return {
+        dataList: null
+      }
+    },
+    methods: {
+      onUpdateList (_list) {
+        console.log('update list', _list)
+        this.dataList = _list
+      }
+    },
   }
 </script>
 
