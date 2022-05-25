@@ -40,6 +40,9 @@
       }
     },
     watch: {
+      isData (_isData) {
+        this.isShow = _isData
+      },
       input: {
         immediate: true,
         handler (_el) {
@@ -54,11 +57,12 @@
           _el.oninput = () => {
             this.isShow = this.isData
           }
-          _el.onblur = () => {
+
+          document.onclick = () => {
             this.isShow = false
           }
         }
-      }
+      },
     },
   }
 </script>
@@ -70,7 +74,7 @@
   width: 300px;
   overflow: hidden;
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 305px;
   border: 2px solid black;
 }
 </style>

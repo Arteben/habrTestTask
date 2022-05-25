@@ -17,24 +17,93 @@
 </template>
 
 <script>
+  const getOneItem = (_img, _alias, _name) => {
+    const img = _img != null && _img || './img/pic.png'
+    return {
+      img,
+      alias: '@' + _alias,
+      name: _name,
+    }
+  }
 
-  const getDataForText = (() => {
-    const getOneItem = (_val) => {
-      return {
-        img: './img/pic.png',
-        alias: '@',
-        name: _val,
-        isSelected: false
+  const getObjForResult = () => {
+    return {
+      items: [],
+      error: false,
+      internetError: false,
+    }
+  }
+
+  const parseItems = (_items) => {
+    const res = getObjForResult()
+    let parseItems
+    try {
+      parseItems = JSON.parse(_items).data
+    } catch(_er) {
+      res.error = true
+    }
+
+    if (res.error) {
+      return res
+    }
+
+    const getDataForSomeType = (i) => {
+      const name = i.name || i.alias
+      switch (i.type) {
+        case 'user':
+           return getOneItem(i.avatar, name, i.alias)
+          break
+        case 'company':
+        default:
+           return getOneItem(i.avatar, name, 'company')
       }
     }
-    return (_value = '') => {
-      const items = []
-      for (let i = 0; i < _value.length; i++) {
-        items.push(getOneItem(_value))
-      }
-      return items
+
+    for (const item of parseItems) {
+      res.items.push(getDataForSomeType(item))
     }
-  })()
+
+    return res
+  }
+
+  const sendQuery = (_val) => {
+    const result = getObjForResult()
+
+    const url = new URL('https://habr.com/kek/v2/publication/suggest-mention')
+    url.searchParams.set('q', _val)
+    const xhr = new XMLHttpRequest()
+    xhr.open('GET', url)
+    xhr.send()
+
+    return new Promise((_resolve) => {
+      xhr.onload = () => {
+        if (xhr.status == 200) {
+          const parseResult = parseItems(xhr.response)
+          result.error = parseResult.error
+          result.items = parseResult.items
+        } else {
+          result.error = true
+        }
+        _resolve(result)
+      }
+      xhr.error = () => {
+        result.internetError = true
+        _resolve(result)
+      }
+    })
+  }
+
+  let sendQueryTimeout = null
+
+  const setSetTimeout = function (_func) {
+    if (sendQueryTimeout) {
+      sendQueryTimeout = null
+    }
+    sendQueryTimeout = window.setTimeout(() => {
+      sendQueryTimeout = null
+      _func()
+    }, 1000)
+  }
 
   module.exports = {
     name: 'specialSelect',
@@ -52,8 +121,19 @@
     computed: {
       text: {
         set (_value) {
-          this.textValue = _value
-          this.$emit('update-companies', getDataForText(_value))
+          if (_value != this.textValue) {
+            if (_value.length > 3 && _value.length < 20) {
+              setSetTimeout(() => {
+                sendQuery(_value).then((_result) => {
+                  this.$emit('update-companies', _result)
+                })
+              })
+            } else {
+              sendQueryTimeout = null
+              this.$emit('update-companies', getObjForResult())
+            }
+            this.textValue = _value
+          }
         },
         get () {
           return this.textValue

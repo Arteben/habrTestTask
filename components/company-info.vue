@@ -2,14 +2,15 @@
   <div
     class="main"
     :class="selected && 'mainSelected' || 'unSelected'"
+    @click="$emit('click-company-info', companyData.alias)"
   >
     <img
       :src="companyData.img"
       :key="companyData.img"
-      />
+    />
     <div class="names">
       <span class="companyName">{{companyData.name}}</span>
-      <span>@{{companyData.name}}</span>
+      <span>{{companyData.alias}}</span>
     </div>
   </div>
 </template>
@@ -17,10 +18,6 @@
 <script>
   module.exports = {
     name: 'companyInfo',
-    data () {
-      return {
-      }
-    },
     props: {
       selected: {
         type: Boolean,
@@ -29,12 +26,8 @@
       companyData: {
         type: Object,
         default () {
-          return {
-            img: '',
-            alias: '',
-            name: '',
-          }
-        }
+          return { img: '', alias: '', name: '' }
+        },
       },
     },
   }
