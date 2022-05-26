@@ -1,9 +1,9 @@
 <template>
   <div class="main">
-    <alias-tales
-      :aliases="taleList"
-      @tale-click="(_alias) => { $emit('tale-click', _alias) }"
-    ></alias-tales>
+    <alias-tiles
+      :aliases="tileList"
+      @tile-click="(_alias) => { $emit('tile-click', _alias) }"
+    ></alias-tiles>
     <input
       ref="input"
       placeholder="type some text..."
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  const aliasTales = httpVueLoader('./alias-tales.vue')
+  const aliasTiles = httpVueLoader('./alias-tiles.vue')
 
   const getOneItem = (_img, _alias, _name) => {
     const img = _img != null && _img || './img/pic.png'
@@ -106,7 +106,7 @@
   module.exports = {
     name: 'specialSelect',
     props: {
-      taleList: Array,
+      tileList: Array,
     },
     data () {
       return {
@@ -114,7 +114,7 @@
       }
     },
     components: {
-      aliasTales
+      aliasTiles
     },
     mounted () {
       const input = this.$refs.input

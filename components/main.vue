@@ -9,8 +9,8 @@
       <special-select
         @update-companies="onUpdateList"
         @create-input="onCreateInput"
-        @tale-click="onClickAlias"
-        :tale-list="tileList"
+        @tile-click="onClickAlias"
+        :tile-list="tileList"
       />
     </div>
     <scrolled-popup
@@ -18,7 +18,7 @@
       :input="selectInput"
     >
       <company-info
-        v-for="(item, index) in dataList"
+        v-for="(item, index) in availableAliasList"
         :key="index"
         :company-data="item"
         @click-company-info="onClickAlias"
@@ -47,6 +47,13 @@
         tileList: [],
       }
     },
+    computed: {
+      availableAliasList () {
+        return this.dataList.filter((_item) => {
+          return !this.tileList.includes(_item.alias)
+        })
+      }
+    },
     methods: {
       onUpdateList (_resultData) {
         this.dataList = [..._resultData.items]
@@ -60,10 +67,14 @@
         })
         if (findIndex >= 0) {
           this.tileList.splice(findIndex, 1)
-        } else {
+        } else if (this.tileList.length == 0) {
           this.tileList = [_alias, ...this.tileList]
         }
       },
+      isDisabledTile (_alias) {
+        console.log('alias', _alias)
+        return this.tileList.includes(_alias)
+      }
     },
   }
 </script>
