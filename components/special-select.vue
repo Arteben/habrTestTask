@@ -29,6 +29,7 @@
       items: [],
       error: false,
       internetError: false,
+      littleSymbols: false,
     }
   }
 
@@ -134,7 +135,9 @@
               })
             } else {
               sendQueryTimeout = null
-              this.$emit('update-companies', getObjForResult())
+              const res = getObjForResult()
+              res.littleSymbols = true
+              this.$emit('update-companies', res)
             }
             this.textValue = _value
           }

@@ -13,6 +13,10 @@
         :tile-list="tileList"
       />
     </div>
+    <div
+      class="stateLine"
+      :class="someDataError && 'stateLineError' || ''"
+    >{{stateLineText}}</div>
     <scrolled-popup
       :is-data="dataList.length > 0" 
       :input="selectInput"
@@ -46,6 +50,9 @@
         dataList: [],
         selectInput: null,
         tileList: [],
+        internetError: false,
+        dataError: false,
+        shortWord: false
       }
     },
     computed: {
@@ -53,11 +60,44 @@
         return this.dataList.filter((_item) => {
           return !this.tileList.includes(_item.alias)
         })
+      },
+      someDataError () {
+        return this.internetError || this.dataError
+      },
+      stateLineText () {
+        let text = ''
+        if (this.shortWord) {
+          text = 'a few letters for request'
+        } else if (this.dataError) {
+          text = 'some data error, maybe something was broke'
+        } else if (this.internetError) {
+          text = 'please check your internet connection'
+        } else if (this.dataList.length == 0) {
+          text = 'no data to display'
+        }
+        return text
       }
     },
     methods: {
-      onUpdateList (_resultData) {
-        this.dataList = [..._resultData.items]
+      onUpdateList (_res) {
+
+        const cleanErrors = () => {
+          this.internetError = false
+          this.dataError = false
+        }
+
+        if (_res.littleSymbols) {
+          this.shortWord = true
+          cleanErrors()
+        } else if (_res.internetError || _res.error) {
+          this.shortWord = false
+          this.dataError = _res.error
+          this.internetError = _res.internetError
+        } else {
+          this.dataList = [..._res.items]
+          this.shortWord = false
+          cleanErrors()
+        }
       },
       onCreateInput (_input) {
         this.selectInput = _input
@@ -73,7 +113,6 @@
         }
       },
       isDisabledTile (_alias) {
-        console.log('alias', _alias)
         return this.tileList.includes(_alias)
       }
     },
@@ -115,5 +154,18 @@ h3 {
 
 .header h4 {
   margin: 0;
+}
+
+.stateLine {
+  display: inline;
+  font-size: 20px;
+  margin: 10px;
+  padding: 10px;
+  font-weight: bolder;
+  color: #2c3c7f;
+}
+
+.stateLineError {
+  color: brown;
 }
 </style>
