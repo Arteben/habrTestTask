@@ -21,8 +21,8 @@
   module.exports = {
     name: 'scrolledPopup',
     props: {
-      input: {
-        type: HTMLInputElement,
+      select: {
+        type: HTMLDivElement,
         default: null
       },
       isData: {
@@ -39,32 +39,52 @@
         }
       }
     },
+    computed: {
+      input () {
+        if (this.select && this.select.querySelector) {
+          return this.select.querySelector('input.textInput')
+        } else {
+          return null
+        }
+      }
+    },
     watch: {
       isData (_isData) {
-        this.isShow = _isData
-      },
-      input: {
-        immediate: true,
-        handler (_el) {
-          if (!_el) return
 
-          getCornerParams.call(this, _el)
-          window.onresize = () => {
-            if (this.isData) {
-              getCornerParams.call(this, _el)
-            }
-          }
+        const calcPopupPos = () => {
+          getCornerParams.call(this, this.select)
+        }
 
-          _el.oninput = () => {
-            this.isShow = this.isData
-          }
-           _el.onfocus = () => {
-            this.isShow = this.isData
-          }
+        const showInput = () => {
+          this.isShow = this.isData
+        }
 
-          // _el.onfocusin = () => {
-          //   this.isShow = false
-          // }
+        const hideForOutFocus = (_event) => {
+          if (_event.target != this.input) {
+            this.isShow = false
+          }
+        }
+
+        if (_isData) {
+          this.isShow = _isData
+          calcPopupPos()
+          if (this.select) {
+            window.addEventListener('resize', calcPopupPos)
+          }
+          if (this.input) {
+            this.input.addEventListener('input', showInput)
+            this.input.addEventListener('focus', showInput)
+            window.addEventListener('click', hideForOutFocus)
+          }
+        } else {
+          if (this.select) {
+            window.removeEventListener('resize', calcPopupPos)
+          }
+          if (this.input) {
+            this.input.removeEventListener('input', showInput)
+            this.input.removeEventListener('focus', showInput)
+            window.removeEventListener('click', hideForOutFocus)
+          }
         }
       },
     },

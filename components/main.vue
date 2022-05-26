@@ -8,8 +8,8 @@
       </div>
       <special-select
         @update-companies="onUpdateList"
-        @create-input="onCreateInput"
         @tile-click="onClickAlias"
+        @create-select="(_el) => {selectEl = _el}"
         :tile-list="tileList"
       />
     </div>
@@ -18,8 +18,8 @@
       :class="someDataError && 'stateLineError' || ''"
     >{{stateLineText}}</div>
     <scrolled-popup
-      :is-data="dataList.length > 0" 
-      :input="selectInput"
+      :is-data="availableAliasList.length > 0" 
+      :select="selectEl"
     >
       <company-info
         v-for="(item, index) in availableAliasList"
@@ -48,7 +48,7 @@
     data () {
       return {
         dataList: [],
-        selectInput: null,
+        selectEl: null,
         tileList: [],
         internetError: false,
         dataError: false,
@@ -98,9 +98,6 @@
           this.shortWord = false
           cleanErrors()
         }
-      },
-      onCreateInput (_input) {
-        this.selectInput = _input
       },
       onClickAlias (_alias) {
         const findIndex = this.tileList.findIndex((_el) => {

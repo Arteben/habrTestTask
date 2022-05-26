@@ -3,7 +3,7 @@
     <div
       v-for="alias in aliases"
       :key="alias"
-      @click="$emit('tile-click', alias)"
+      @click.stop="$emit('tile-click', alias)"
       class="tile"
     >{{alias}}</div>
   </div>

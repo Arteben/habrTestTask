@@ -5,7 +5,7 @@
       @tile-click="(_alias) => { $emit('tile-click', _alias) }"
     ></alias-tiles>
     <input
-      ref="input"
+      class="textInput"
       placeholder="type some text..."
       v-model="text"
     />
@@ -118,10 +118,7 @@
       aliasTiles
     },
     mounted () {
-      const input = this.$refs.input
-      if (input) {
-        this.$emit('create-input', input)
-      }
+      this.$emit('create-select', this.$el)
     },
     computed: {
       text: {
