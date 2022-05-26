@@ -1,8 +1,8 @@
 <template>
   <div
     class="main"
-    :class="selected && 'mainSelected' || 'unSelected'"
-    @click="$emit('click-company-info', companyData.alias)"
+    :class="disabled && 'disabled' || 'selected'"
+    @click.stop="onClick(companyData.alias)"
   >
     <img
       :src="companyData.img"
@@ -19,7 +19,7 @@
   module.exports = {
     name: 'companyInfo',
     props: {
-      selected: {
+      disabled: {
         type: Boolean,
         default: false,
       },
@@ -30,6 +30,13 @@
         },
       },
     },
+    methods: {
+      onClick (_alias) {
+        if (!this.disabled) {
+          this.$emit('click-company-info', _alias)
+        }
+      }
+    }
   }
 </script>
 
@@ -45,12 +52,12 @@
     cursor: pointer;
   }
 
-  .unSelected:hover {
+  .selected:hover {
     background: rgb(212, 212, 212);
   }
 
-  .mainSelected {
-    background: rgb(212, 212, 212);
+  .disabled {
+    cursor: not-allowed;
   }
 
   img {

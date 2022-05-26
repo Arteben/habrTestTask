@@ -21,6 +21,7 @@
         v-for="(item, index) in availableAliasList"
         :key="index"
         :company-data="item"
+        :disabled="tileList.length > 0"
         @click-company-info="onClickAlias"
       >
     </scrolled-popup>
